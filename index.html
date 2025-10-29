@@ -161,73 +161,68 @@
       <h1>SAD Ticket Upload</h1>
     </div>
 
-    <form id="ticketForm">
-      <div class="group">
-        <label>Fecha</label>
-        <input class="control" type="date" name="fecha" id="fecha" required />
-      </div>
-
-      <div class="group">
-        <label>Tienda</label>
-        <select class="control" name="tienda" id="tienda" required>
-          <option value="">Seleccione Tienda</option>
-        </select>
-      </div>
-
-      <div class="group">
-        <label>Repartidor</label>
-        <select class="control" name="repartidor" id="repartidor" required>
-          <option value="">Seleccione Repartidor</option>
-        </select>
-      </div>
-
-      <div class="group">
-        <label>Franja horaria</label>
-        <select class="control" name="franja" id="franja" required>
-          <option value="">Seleccione Franja</option>
-        </select>
-      </div>
-
-      <div class="row-2">
-        <div class="group">
-          <label>Pedidos (P)</label>
-          <input class="control" type="number" name="pedidos" min="1" max="12" required />
-        </div>
-        <div class="group">
-          <label>Dobles (D)</label>
-          <input class="control" type="number" name="dobles" min="0" max="12" value="0" required />
-        </div>
-      </div>
-
-      <div class="row-2">
-        <div class="group">
-          <label>Extrarradios (XR)</label>
-          <input class="control" type="number" name="xr" min="0" max="12" value="0" required />
-        </div>
-      <div class="row-2">
-        <div class="group">
-          <label>Kilómetros (Km)</label>
-          <input class="control" type="number" name="km" id="km" min="0" max="200" value="0" required />
-      </div>
-        <div class="group">
-          <label>Obs (20 máx.)</label>
-          <input class="control" type="text" name="obs" id="obs" maxlength="20" placeholder="Opcional" />
-        </div>
-      </div>
-
-<div class="group">
-  <label>Foto ticket</label>
-  <div style="display:flex; gap:8px;">
-    <button type="button" class="control" style="flex:1;" onclick="abrirCamara()">📷 Sacar foto</button>
-    <button type="button" class="control" style="flex:1;" onclick="abrirArchivos()">📁 Subir archivo</button>
+<form id="ticketForm">
+  <div class="group">
+    <label>Fecha</label>
+    <input class="control" type="date" name="fecha" id="fecha" required />
   </div>
-  <input type="file" id="foto" accept="image/*" style="display:none;" required />
-</div>
 
+  <div class="group">
+    <label>Tienda</label>
+    <select class="control" name="tienda" id="tienda" required>
+      <option value="">Seleccione Tienda</option>
+    </select>
+  </div>
 
-      <button type="submit">📸 Subir ticket</button>
-      <div id="msg"></div>
-    </form>
+  <div class="group">
+    <label>Repartidor</label>
+    <select class="control" name="repartidor" id="repartidor" required>
+      <option value="">Seleccione Repartidor</option>
+    </select>
+  </div>
+
+  <div class="group">
+    <label>Franja horaria</label>
+    <select class="control" name="franja" id="franja" required>
+      <option value="">Seleccione Franja</option>
+    </select>
+  </div>
+
+  <div class="row-2">
+    <div class="group">
+      <label>Pedidos (P)</label>
+      <input class="control" type="number" name="pedidos" min="1" max="12" required />
+    </div>
+    <div class="group">
+      <label>Dobles (D)</label>
+      <input class="control" type="number" name="dobles" min="0" max="12" value="0" required />
+    </div>
+  </div>
+
+  <div class="row-3">
+    <div class="group">
+      <label>XR</label>
+      <input class="control" type="number" name="xr" min="0" max="12" value="0" required />
+    </div>
+    <div class="group">
+      <label>Kilómetros (Km)</label>
+      <input class="control" type="number" name="km" id="km" min="0" max="200" value="0" required />
+    </div>
+    <div class="group">
+      <label>Obs</label>
+      <input class="control" type="text" name="obs" id="obs" maxlength="20" placeholder="Opcional" />
+    </div>
+  </div>
+
+  <div class="group">
+    <label>Foto ticket</label>
+    <input class="control" type="file" id="foto" accept="image/*" required capture="environment" />
+  </div>
+
+  <button type="submit">📸 Subir ticket</button>
+
+  <div id="msg"></div>
+</form>
   </div>
 
   <!-- SCRIPT PRINCIPAL -->
