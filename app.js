@@ -1,16 +1,39 @@
-// CONFIGURA AQUÍ TU ENDPOINT DE APPS SCRIPT
-//const BACKEND_URL = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
-// URL para leer las listas
-//const BACKEND_LISTAS = "https://script.google.com/macros/s/AKfycbwE_JuJWDpZcI7WqigBsJ8Bw2-JDHYy0WMm9IUY0AevIO6AorvkLYYRvmiGqlRilIwu/exec"; // <- URL SAD_PROXY_API
-// URL para subir los tickets (la de siempre)
-//const BACKEND_TICKETS = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
-// ENDPOINT DEL PROXY CLOUDFLARE
+// ============================
+// SAD Tickets - App.js (Versión Final Limpia)
+// ============================
+
+// 🔹 URL DEL PROXY (Cloudflare Workers)
 const PROXY = "https://sad-proxy.colatino-ventas-enlinea.workers.dev/";
 
-// URL REAL DE GOOGLE APPS SCRIPT
+// 🔹 URL DE TU APP SCRIPT (backend principal)
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
 
-// Para leer las listas desde Sheets
+// ====== SPINNER ======
+function startSpinner() {
+  const s = document.getElementById("spinner");
+  if (s) s.style.visibility = "visible";
+}
+
+function stopSpinner() {
+  const s = document.getElementById("spinner");
+  if (s) s.style.visibility = "hidden";
+}
+
+// ====== ALERTA SIN CONEXIÓN ======
+function showOfflineAlert() {
+  const el = document.getElementById("offline-alert");
+  el.style.display = "block";
+  setTimeout(() => (el.style.display = "none"), 4000);
+}
+
+// ====== FECHA AUTOMÁTICA ======
+(function initFechaHoy() {
+  const hoy = new Date();
+  const yyyy_mm_dd = hoy.toISOString().split("T")[0];
+  document.getElementById("fecha").value = yyyy_mm_dd;
+})();
+
+// ====== CARGAR LISTAS DESDE GOOGLE SHEETS ======
 async function cargarListas() {
   startSpinner();
   try {
@@ -21,48 +44,17 @@ async function cargarListas() {
     fillSelect("tienda", data.tiendas);
     fillSelect("repartidor", data.repartidores);
     fillSelect("franja", data.franjas);
-    stopSpinner();
   } catch (err) {
     console.error("Error al cargar listas:", err);
-    stopSpinner();
     fillSelect("tienda", ["ERROR"]);
     fillSelect("repartidor", ["ERROR"]);
     fillSelect("franja", ["ERROR"]);
+  } finally {
+    stopSpinner();
   }
 }
 
-// ====== ALERTA SIN CONEXIÓN ======
-function showOfflineAlert() {
-  const el = document.getElementById("offline-alert");
-  el.style.display = "block";
-  setTimeout(() => (el.style.display = "none"), 4000);
-}
-
-// 1. Pre-cargar fecha de hoy
-(function initFechaHoy() {
-  const hoy = new Date();
-  const yyyy_mm_dd = hoy.toISOString().split("T")[0];
-  document.getElementById("fecha").value = yyyy_mm_dd;
-})();
-
-// 2. Cargar listas dinámicas desde Apps Script
-async function cargarListas() {
-  try {
-    const res = await fetch(BACKEND_LISTAS);
-    const data = await res.json();
-    fillSelect("tienda", data.tiendas);
-    fillSelect("repartidor", data.repartidores);
-    fillSelect("franja", data.franjas);
-    stopSpinner();
-  } catch (err) {
-    console.error("Error al cargar listas:", err);
-    stopSpinner();
-    fillSelect("tienda", ["ERROR"]);
-    fillSelect("repartidor", ["ERROR"]);
-    fillSelect("franja", ["ERROR"]);
-  }
-}
-
+// ====== FUNCIÓN AUXILIAR PARA LLENAR SELECTS ======
 function fillSelect(id, arr) {
   const el = document.getElementById(id);
   el.innerHTML = "";
@@ -74,25 +66,28 @@ function fillSelect(id, arr) {
   });
 }
 
+// Llamar a cargar las listas al iniciar
 cargarListas();
 
-// 3. Envío del ticket
+// ====== ENVÍO DE FORMULARIO (TICKET) ======
 const formEl = document.getElementById("ticketForm");
 const msgEl = document.getElementById("msg");
 
 formEl.addEventListener("submit", async (e) => {
   e.preventDefault();
-  
-  // ✅ Comprobamos conexión
+
+  // ✅ Verificar conexión
   if (!navigator.onLine) {
     showOfflineAlert();
     return;
   }
+
   msgEl.textContent = "Subiendo...";
   startSpinner();
 
   const file = document.getElementById("foto").files[0];
   if (!file) {
+    stopSpinner();
     msgEl.textContent = "❌ Falta la foto";
     msgEl.style.color = "#ffdddd";
     return;
@@ -115,7 +110,6 @@ formEl.addEventListener("submit", async (e) => {
   };
 
   try {
-    // Para enviar, no necesitamos leer la respuesta (Apps Script no da CORS cómodo)
     await fetch(BACKEND_URL, {
       method: "POST",
       mode: "no-cors",
@@ -127,17 +121,18 @@ formEl.addEventListener("submit", async (e) => {
     msgEl.style.color = "#9dffb0";
 
     formEl.reset();
-    // reponer fecha actual tras reset
-    const hoy = new Date().toISOString().split("T")[0];
-    document.getElementById("fecha").value = hoy;
-
+    // Restablecer fecha actual después del envío
+    document.getElementById("fecha").value = new Date().toISOString().split("T")[0];
   } catch (err) {
     console.error(err);
     msgEl.textContent = "❌ Error al subir: " + err.message;
     msgEl.style.color = "#ffdddd";
+  } finally {
+    stopSpinner();
   }
 });
 
+// ====== CONVERTIR ARCHIVO A BASE64 ======
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const r = new FileReader();
