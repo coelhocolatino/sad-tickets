@@ -222,18 +222,22 @@
       <label>Km</label>
       <input class="control" type="number" name="km" id="km" min="0" max="200" value="0" required />
     </div>
-    <div class="group">
-      <label>Obs</label>
-      <input class="control" type="text" name="obs" id="obs" maxlength="20" placeholder="Opcional" />
+      <div class="group">
+        <label>Obs</label>
+        <input class="control" type="text" name="obs" id="obs" maxlength="20" placeholder="Opcional" />
+      </div>
     </div>
-  </div>
 
-  <div class="group">
-    <label>Foto ticket</label>
-    <input class="control" type="file" id="foto" accept="image/*" required />
-  </div>
+    <div class="group">
+      <label>Foto ticket</label>
+      <div class="row-2">
+        <button type="button" id="btnCamara" class="control" style="background:#0055aa; color:#fff;">📸 Sacar foto</button>
+        <button type="button" id="btnArchivo" class="control" style="background:#0077cc; color:#fff;">📂 Subir archivo</button>
+      </div>
+      <input class="control" type="file" id="foto" accept="image/*" style="display:none;" required />
+    </div>
 
-  <button type="submit">📸 Subir ticket</button>
+  <button type="submit">⬆️ Subir ticket</button>
 
   <div id="msg"></div>
 </form>
