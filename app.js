@@ -31,6 +31,12 @@ async function cargarListas() {
   }
 }
 
+// ====== ALERTA SIN CONEXIÓN ======
+function showOfflineAlert() {
+  const el = document.getElementById("offline-alert");
+  el.style.display = "block";
+  setTimeout(() => (el.style.display = "none"), 4000);
+}
 
 // 1. Pre-cargar fecha de hoy
 (function initFechaHoy() {
@@ -76,6 +82,10 @@ const msgEl = document.getElementById("msg");
 
 formEl.addEventListener("submit", async (e) => {
   e.preventDefault();
+    // ✅ Comprobamos conexión
+  if (!navigator.onLine) {
+    showOfflineAlert();
+    return;
   msgEl.textContent = "Subiendo...";
   msgEl.style.color = "#fff";
 
