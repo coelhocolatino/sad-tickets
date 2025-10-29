@@ -1,5 +1,9 @@
 // CONFIGURA AQUÍ TU ENDPOINT DE APPS SCRIPT
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
+// URL para leer las listas
+const BACKEND_LISTAS = "https://script.google.com/macros/s/AKfycbwE_JuJWDpZcI7WqigBsJ8Bw2-JDHYy0WMm9IUY0AevIO6AorvkLYYRvmiGqlRilIwu/exec"; // <- URL SAD_PROXY_API
+// URL para subir los tickets (la de siempre)
+const BACKEND_TICKETS = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
 
 // 1. Pre-cargar fecha de hoy
 (function initFechaHoy() {
@@ -10,21 +14,16 @@ const BACKEND_URL = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsa
 
 // 2. Cargar listas dinámicas desde Apps Script
 async function cargarListas() {
-  // IMPORTANTE: CORS nos bloquea si intentamos leer .json() directamente.
-  // Truco: usamos un proxy "passthrough" con https://cors.isomorphic.app/
-  // que añade los headers CORS.
-  const corsURL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(BACKEND_URL);
-
   try {
-    const res = await fetch(corsURL);
+    const res = await fetch(BACKEND_LISTAS);
     const data = await res.json();
-
     fillSelect("tienda", data.tiendas);
     fillSelect("repartidor", data.repartidores);
     fillSelect("franja", data.franjas);
+    stopSpinner();
   } catch (err) {
     console.error("Error al cargar listas:", err);
-    // fallback visual para no dejar vacío
+    stopSpinner();
     fillSelect("tienda", ["ERROR"]);
     fillSelect("repartidor", ["ERROR"]);
     fillSelect("franja", ["ERROR"]);
