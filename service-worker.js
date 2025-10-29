@@ -1,32 +1,97 @@
-const CACHE_NAME = "sad-tickets-v1";
+// ==============================
+// SAD Tickets - Service Worker
+// ==============================
+
+const CACHE_NAME = "sad-tickets-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./app.js",
   "./manifest.json",
-  "./sr-logo.png"
+  "./sr-logo.png",
 ];
 
-// instalar: cachea los archivos base de la app
+// ------------------------------
+// Instalación: guarda los assets en caché
+// ------------------------------
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
+  self.skipWaiting();
 });
 
-// activar: limpiar caches viejos si cambiamos versión
+// ------------------------------
+// Activación: limpia cachés antiguas
+// ------------------------------
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(k => (k !== CACHE_NAME ? caches.delete(k) : null)))
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
     )
+  );
+  self.clients.claim();
+});
+
+// ------------------------------
+// Interceptar peticiones (fetch)
+// ------------------------------
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  const url = req.url;
+
+  // Ignora las llamadas de Analytics o proxys externos
+  if (
+    url.includes("google-analytics") ||
+    url.includes("api.allorigins") ||
+    url.includes("workers.dev")
+  ) {
+    return;
+  }
+
+  // Estrategia: Cache First, luego red de respaldo
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      if (cached) {
+        // actualiza en segundo plano
+        fetch(req).then((response) => {
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(req, response.clone());
+          });
+        });
+        return cached;
+      }
+      return fetch(req)
+        .then((response) => {
+          const cloned = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, cloned));
+          return response;
+        })
+        .catch(() => caches.match("./index.html"));
+    })
   );
 });
 
-// fetch: servir rápido desde cache si offline / lento
+// ------------------------------
+// Manejo de peticiones OPTIONS (CORS preflight)
+// ------------------------------
 self.addEventListener("fetch", (event) => {
-  const req = event.request;
-  event.respondWith(
-    caches.match(req).then(match => match || fetch(req))
-  );
+  if (event.request.method === "OPTIONS") {
+    event.respondWith(
+      new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      })
+    );
+  }
 });
