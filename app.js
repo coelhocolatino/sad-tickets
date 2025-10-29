@@ -74,6 +74,18 @@ cargarListas();
 
 // ====== ENVÍO DE FORMULARIO (TICKET) ======
 const formEl = document.getElementById("ticketForm");
+// === Control de botones para foto ===
+const fotoInput = document.getElementById("foto");
+document.getElementById("btnCamara").addEventListener("click", () => {
+  fotoInput.removeAttribute("capture"); // fuerza cámara
+  fotoInput.setAttribute("capture", "environment");
+  fotoInput.click();
+});
+document.getElementById("btnArchivo").addEventListener("click", () => {
+  fotoInput.removeAttribute("capture"); // fuerza modo galería
+  fotoInput.click();
+});
+
 const msgEl = document.getElementById("msg");
 
 formEl.addEventListener("submit", async (e) => {
