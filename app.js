@@ -82,12 +82,14 @@ const msgEl = document.getElementById("msg");
 
 formEl.addEventListener("submit", async (e) => {
   e.preventDefault();
-    // ✅ Comprobamos conexión
+  
+  // ✅ Comprobamos conexión
   if (!navigator.onLine) {
     showOfflineAlert();
     return;
+  }
   msgEl.textContent = "Subiendo...";
-  msgEl.style.color = "#fff";
+  startSpinner();
 
   const file = document.getElementById("foto").files[0];
   if (!file) {
