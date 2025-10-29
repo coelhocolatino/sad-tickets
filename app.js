@@ -108,6 +108,7 @@ formEl.addEventListener("submit", async (e) => {
     pedidos: datos.pedidos,
     dobles: datos.dobles,
     xr: datos.xr,
+    km: datos.km,           // 👈 nuevo campo
     obs: datos.obs || "",
     imagenBase64: base64
   };
