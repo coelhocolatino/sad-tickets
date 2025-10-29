@@ -1,9 +1,36 @@
 // CONFIGURA AQUÍ TU ENDPOINT DE APPS SCRIPT
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
+//const BACKEND_URL = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
 // URL para leer las listas
-const BACKEND_LISTAS = "https://script.google.com/macros/s/AKfycbwE_JuJWDpZcI7WqigBsJ8Bw2-JDHYy0WMm9IUY0AevIO6AorvkLYYRvmiGqlRilIwu/exec"; // <- URL SAD_PROXY_API
+//const BACKEND_LISTAS = "https://script.google.com/macros/s/AKfycbwE_JuJWDpZcI7WqigBsJ8Bw2-JDHYy0WMm9IUY0AevIO6AorvkLYYRvmiGqlRilIwu/exec"; // <- URL SAD_PROXY_API
 // URL para subir los tickets (la de siempre)
-const BACKEND_TICKETS = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
+//const BACKEND_TICKETS = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
+// ENDPOINT DEL PROXY CLOUDFLARE
+const PROXY = "https://sad-proxy.colatino-ventas-enlinea.workers.dev/";
+
+// URL REAL DE GOOGLE APPS SCRIPT
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
+
+// Para leer las listas desde Sheets
+async function cargarListas() {
+  startSpinner();
+  try {
+    const proxyURL = `${PROXY}?url=${encodeURIComponent(BACKEND_URL)}`;
+    const res = await fetch(proxyURL);
+    const data = await res.json();
+
+    fillSelect("tienda", data.tiendas);
+    fillSelect("repartidor", data.repartidores);
+    fillSelect("franja", data.franjas);
+    stopSpinner();
+  } catch (err) {
+    console.error("Error al cargar listas:", err);
+    stopSpinner();
+    fillSelect("tienda", ["ERROR"]);
+    fillSelect("repartidor", ["ERROR"]);
+    fillSelect("franja", ["ERROR"]);
+  }
+}
+
 
 // 1. Pre-cargar fecha de hoy
 (function initFechaHoy() {
