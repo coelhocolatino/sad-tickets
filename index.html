@@ -5,24 +5,25 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#003366" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SAD Tickets" />
+  <meta name="display" content="standalone" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="sr-logo.png" />
   <link rel="apple-touch-icon" href="sr-logo.png" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="SAD Tickets" />
   <title>SAD Tickets</title>
 
   <style>
     :root {
-      --bg1:#003366;
-      --bg2:#0077cc;
-      --card-bg:rgba(255,255,255,0.12);
-      --text-main:#ffffff;
-      --text-dark:#003366;
-      --radius-card:24px;
-      --radius-field:12px;
-      --font:system-ui,-apple-system,BlinkMacSystemFont,"Poppins","Roboto","Segoe UI",sans-serif;
+      --bg1: #003366;
+      --bg2: #0077cc;
+      --card-bg: rgba(255,255,255,0.12);
+      --text-main: #ffffff;
+      --text-dark: #003366;
+      --radius-card: 24px;
+      --radius-field: 12px;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Poppins", "Roboto", "Segoe UI", sans-serif;
     }
 
     * {
@@ -34,7 +35,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
       color: var(--text-main);
       display: flex;
       justify-content: center;
@@ -127,6 +128,11 @@
       color: #fff;
     }
 
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     @supports (-webkit-touch-callout:none) {
       input, select, button { font-size:16px !important; }
     }
@@ -134,10 +140,24 @@
 </head>
 <body>
 
+  <!-- SPINNER DE CARGA -->
+  <div id="spinner" style="
+    position:fixed; inset:0;
+    display:flex; justify-content:center; align-items:center;
+    background:rgba(0,0,0,0.6);
+    z-index:1000; visibility:hidden;">
+    <div style="
+      width:60px; height:60px;
+      border:6px solid #fff;
+      border-top-color:#0077cc;
+      border-radius:50%;
+      animation:spin 1s linear infinite;"></div>
+  </div>
+
+  <!-- FORMULARIO PRINCIPAL -->
   <div class="card">
     <div class="header">
-      <img class="logo" src="sr-logo.png" alt="SR Logo"
-           onerror="this.style.display='none'">
+      <img class="logo" src="sr-logo.png" alt="SR Logo" onerror="this.style.display='none'">
       <h1>SAD Ticket Upload</h1>
     </div>
 
@@ -196,27 +216,30 @@
       </div>
 
       <button type="submit">📸 Subir ticket</button>
-
       <div id="msg"></div>
     </form>
   </div>
 
+  <!-- SCRIPT PRINCIPAL -->
   <script src="app.js"></script>
+
   <script>
-    // registra service worker para habilitar instalación tipo app
+    // Registrar el service worker (PWA)
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js").catch(err => {
         console.warn("SW fail:", err);
       });
     }
   </script>
+
+  <!-- ALERTA SIN CONEXIÓN -->
   <div id="offline-alert" style="
-  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-  background:#ff5555; color:#fff; font-weight:600; font-size:0.95rem;
-  padding:12px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.3);
-  z-index:2000; display:none;">
-  ⚠️ Sin conexión. Guarda y reintenta más tarde.
-</div>
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:#ff5555; color:#fff; font-weight:600; font-size:0.95rem;
+    padding:12px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.3);
+    z-index:2000; display:none;">
+    ⚠️ Sin conexión. Guarda y reintenta más tarde.
+  </div>
 
 </body>
 </html>
