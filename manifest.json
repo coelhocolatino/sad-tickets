@@ -1,0 +1,21 @@
+{
+  "name": "SAD Tickets",
+  "short_name": "SAD",
+  "description": "Carga de tickets de reparto SAD",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#003366",
+  "theme_color": "#003366",
+  "icons": [
+    {
+      "src": "sr-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "sr-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
