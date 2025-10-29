@@ -13,7 +13,7 @@ async function cargarListas() {
   // IMPORTANTE: CORS nos bloquea si intentamos leer .json() directamente.
   // Truco: usamos un proxy "passthrough" con https://cors.isomorphic.app/
   // que añade los headers CORS.
-  const corsURL = "https://cors.isomorphic.app/" + encodeURIComponent(BACKEND_URL);
+  const corsURL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(BACKEND_URL);
 
   try {
     const res = await fetch(corsURL);
