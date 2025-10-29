@@ -57,7 +57,9 @@ async function cargarListas() {
 // ====== FUNCIÓN AUXILIAR PARA LLENAR SELECTS ======
 function fillSelect(id, arr) {
   const el = document.getElementById(id);
-  el.innerHTML = "";
+  const defaultOpt = el.querySelector("option"); // guarda la primera opción
+  el.innerHTML = ""; // limpia todo
+  el.appendChild(defaultOpt); // vuelve a agregar el placeholder
   arr.forEach(v => {
     const opt = document.createElement("option");
     opt.value = v;
@@ -65,6 +67,7 @@ function fillSelect(id, arr) {
     el.appendChild(opt);
   });
 }
+
 
 // Llamar a cargar las listas al iniciar
 cargarListas();
