@@ -210,10 +210,15 @@
         </div>
       </div>
 
-      <div class="group">
-        <label>Foto ticket</label>
-        <input class="control" type="file" id="foto" accept="image/*" required />
-      </div>
+<div class="group">
+  <label>Foto ticket</label>
+  <div style="display:flex; gap:8px;">
+    <button type="button" class="control" style="flex:1;" onclick="abrirCamara()">📷 Sacar foto</button>
+    <button type="button" class="control" style="flex:1;" onclick="abrirArchivos()">📁 Subir archivo</button>
+  </div>
+  <input type="file" id="foto" accept="image/*" style="display:none;" required />
+</div>
+
 
       <button type="submit">📸 Subir ticket</button>
       <div id="msg"></div>
