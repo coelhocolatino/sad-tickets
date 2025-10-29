@@ -141,3 +141,16 @@ function fileToBase64(file) {
     r.readAsDataURL(file);
   });
 }
+
+function abrirCamara() {
+  const input = document.getElementById("foto");
+  input.setAttribute("capture", "environment");
+  input.click();
+}
+
+function abrirArchivos() {
+  const input = document.getElementById("foto");
+  input.removeAttribute("capture");
+  input.click();
+}
+
