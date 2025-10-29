@@ -48,12 +48,14 @@ self.addEventListener("fetch", (event) => {
 
   // Ignora las llamadas de Analytics o proxys externos
   if (
-    url.includes("google-analytics") ||
-    url.includes("api.allorigins") ||
-    url.includes("workers.dev")
-  ) {
-    return;
-  }
+  url.includes("google-analytics") ||
+  url.includes("api.allorigins") ||
+  url.includes("workers.dev") ||
+  url.startsWith("chrome-extension://")
+) {
+  return;
+}
+
 
   // Estrategia: Cache First, luego red de respaldo
   event.respondWith(
