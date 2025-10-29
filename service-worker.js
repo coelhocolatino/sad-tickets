@@ -79,6 +79,13 @@ self.addEventListener("fetch", (event) => {
 });
 
 // ------------------------------
+// Notificar a los clientes cuando estén offline
+// ------------------------------
+self.addEventListener("sync", (event) => {
+  console.log("Sync event:", event);
+});
+
+// ------------------------------
 // Manejo de peticiones OPTIONS (CORS preflight)
 // ------------------------------
 self.addEventListener("fetch", (event) => {
