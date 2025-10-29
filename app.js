@@ -6,7 +6,7 @@
 const PROXY = "https://sad-proxy.colatino-ventas-enlinea.workers.dev/";
 
 // 🔹 URL DE TU APP SCRIPT (backend principal)
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycby0MuXvx1BHS_GYAbsapfi6BNbuJNCkB5JtiJ8sPt9xSbJdl040EsWgAS9BOpW8YRmyXA/exec";
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxCRETDwZ2UceUeUtvkI1sNoS7OF3P1PIUc7bRNzOvbasd-TxILIRAslhRzy2Hp2JHwWQ/exec";
 
 // ====== SPINNER ======
 function startSpinner() {
