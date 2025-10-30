@@ -2,7 +2,7 @@
 // SAD Tickets - Service Worker
 // ==============================
 
-const CACHE_NAME = "sad-tickets-v3"; // ← sube versión
+const CACHE_NAME = "sad-tickets-v4"; // forzar actualización total
 const ASSETS = [
   "./",
   "./index.html",
