@@ -2,13 +2,15 @@
 // SAD Tickets - Service Worker
 // ==============================
 
-const CACHE_NAME = "sad-tickets-v2";
+const CACHE_NAME = "sad-tickets-v3"; // ← sube versión
 const ASSETS = [
   "./",
   "./index.html",
   "./app.js",
   "./manifest.json",
-  "./sr-logo.png",
+  "./sr-logo.png",      // logo interno de la app
+  "./sr-icon-192.png",  // ← nuevos
+  "./sr-icon-512.png"   // ← nuevos
 ];
 
 // ------------------------------
