@@ -8,7 +8,7 @@ const ASSETS = [
   "./index.html",
   "./app.js",
   "./manifest.json",
-  "./sr-logo-blanco-192.png",      // logo interno de la app
+//  "./sr-logo-blanco-192.png",      // logo interno de la app
   "./sr-icon-192.png",  // ← nuevos
   "./sr-icon-512.png"   // ← nuevos
 ];
