@@ -10,12 +10,13 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "sr-logo-192.png",
+      "src": "sr-icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "sr-logo-512.png",
+      "src": "sr-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
