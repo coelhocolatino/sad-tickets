@@ -1,3 +1,4 @@
+//"start_url": "./index.html?ver=2"
 {
   "name": "SAD Tickets",
   "short_name": "SAD Tickets",
@@ -23,4 +24,4 @@
     }
   ]
 }
-//"start_url": "./index.html?ver=2"
+
