@@ -2,6 +2,16 @@
 // SAD Tickets - App.js (Versión Final Limpia)
 // ============================
 
+import express from "express";
+import ticketRoutes from "./routes/tickets.js";
+
+const app = express();
+app.use(express.json());
+app.use("/api/tickets", ticketRoutes);
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`Servidor activo en puerto ${PORT}`));
+
 // 🔹 URL DEL PROXY (Cloudflare Workers)
 const PROXY = "https://sad-proxy.colatino-ventas-enlinea.workers.dev/";
 
