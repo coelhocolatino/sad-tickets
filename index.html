@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>SAD Tickets</title>
+<link rel="icon" href="https://coelhocolatino.github.io/sad-tickets/sr-logo.png">
+<style>
+  body {
+    margin: 0; font-family: system-ui, sans-serif;
+    background: linear-gradient(180deg, #003366, #0077cc);
+    color: #fff; display: flex; justify-content: center; align-items: flex-start;
+    min-height: 100vh; padding: 24px 16px;
+  }
+  .card {
+    width: 100%; max-width: 420px; background: rgba(255,255,255,0.12);
+    border-radius: 24px; padding: 20px 16px 24px;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.4); backdrop-filter: blur(6px);
+  }
+  h1 { text-align: center; font-size: 1.1rem; margin-bottom: 16px; }
+  form { display: flex; flex-direction: column; gap: 12px; }
+  label { font-weight: 500; font-size: 0.9rem; }
+  .control { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 1rem; color: #003366; }
+  button {
+    background: #fff; color: #003366; font-weight: 600; padding: 14px;
+    border: none; border-radius: 12px; cursor: pointer;
+  }
+  #msg { text-align: center; min-height: 1.4em; margin-top: 6px; font-weight: 600; }
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h1>SAD Ticket Upload</h1>
+
+  <form id="f">
+    <label>Fecha</label>
+    <input class="control" type="date" id="fecha" name="fecha" required>
+
+    <label>Tienda</label>
+    <select class="control" id="tienda" required></select>
+
+    <label>Repartidor</label>
+    <select class="control" id="repartidor" required></select>
+
+    <label>Franja horaria</label>
+    <select class="control" id="franja" required></select>
+
+    <label>Foto ticket</label>
+    <input class="control" type="file" id="foto" accept="image/*" required>
+
+    <button type="submit">📸 Subir ticket</button>
+    <div id="msg"></div>
+  </form>
+</div>
+
+<script>
+// 🔹 URL de tu App Script (backend principal)
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxm8H7m88UEkSWpzeh7Gu3ugLUvYIGqxrCBpheSX_L6GzzjkoqSpTZwxn3gDk6tAqCnxg/exec";
+
+// Fecha actual
+document.getElementById("fecha").value = new Date().toISOString().split("T")[0];
+
+// 📦 Cargar listas desde Apps Script (vía fetch)
+async function cargarListas() {
+  const msg = document.getElementById("msg");
+  msg.textContent = "Cargando listas...";
+  try {
+    const res = await fetch(BACKEND_URL + "?mode=getListas");
+    const data = await res.json();
+    console.log("Datos recibidos:", data);
+    fillSelect("tienda", data.tiendas);
+    fillSelect("repartidor", data.repartidores);
+    fillSelect("franja", data.franjas);
+    msg.textContent = "";
+  } catch (err) {
+    msg.textContent = "❌ Error cargando listas: " + err.message;
+  }
+}
+
+// Rellenar <select>
+function fillSelect(id, arr) {
+  const el = document.getElementById(id);
+  el.innerHTML = "";
+  arr.forEach(v => {
+    const op = document.createElement("option");
+    op.value = v; op.textContent = v;
+    el.appendChild(op);
+  });
+}
+
+// Llamar automáticamente al cargar la página
+cargarListas();
+
+// 📸 Envío del ticket
+document.getElementById("f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = document.getElementById("msg");
+  msg.textContent = "Subiendo ticket...";
+
+  const file = document.getElementById("foto").files[0];
+  if (!file) { msg.textContent = "Selecciona una foto."; return; }
+
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const datos = Object.fromEntries(new FormData(document.getElementById("f")).entries());
+    const payload = { ...datos, imagenBase64: reader.result };
+
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const text = await res.text();
+      msg.textContent = text.includes("OK") ? "✅ Ticket subido correctamente" : text;
+      if (text.includes("OK")) setTimeout(() => location.reload(), 2500);
+    } catch (err) {
+      msg.textContent = "❌ Error al subir: " + err.message;
+    }
+  };
+  reader.readAsDataURL(file);
+});
+</script>
+</body>
+</html>
