@@ -54,10 +54,7 @@
     }
     .row-2 { display: flex; gap: 12px; }
     .row-2 .group { flex: 1; }
-    .row-3 {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
+    .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .row-3 .group label { font-size: 0.85rem; text-align: center; display: block; }
     .row-3 .control { text-align: center; font-size: 1rem; padding: 12px 8px; }
     button {
@@ -66,7 +63,7 @@
       font-size: 1rem; font-weight: 600;
       padding: 16px 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
-    #msg { text-align: center; min-height: 1.4em; font-size: .9rem; font-weight: 600; color: #fff; }
+    #msg { text-align: center; min-height: 1.4em; font-size: .95rem; font-weight: 600; margin-top: 6px; }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @supports (-webkit-touch-callout:none) { input, select, button { font-size:16px !important; } }
   </style>
@@ -161,13 +158,13 @@
       });
     }
 
-    // Subir ticket
+    // Subir ticket con OCR y feedback visual
     document.getElementById("ticketForm").addEventListener("submit", e => {
       e.preventDefault();
       const file = document.getElementById("foto").files[0];
       if (!file) return alert("Por favor, selecciona una foto del ticket.");
       spinner.style.visibility = "visible";
-      msg.textContent = "Subiendo ticket...";
+      msg.textContent = "⏳ Subiendo ticket...";
 
       const reader = new FileReader();
       reader.onload = async () => {
@@ -181,8 +178,18 @@
             body: JSON.stringify(datos)
           });
           const text = await resp.text();
-          msg.textContent = text;
-          msg.style.color = text.includes("ERROR") ? "#ffdddd" : "#9dffb0";
+
+          if (text.includes("OK") && text.includes("E")) {
+            const embolsador = text.match(/E\d+/i)?.[0] || "";
+            msg.innerHTML = `✅ <b>Embolsador ${embolsador}</b> detectado correctamente`;
+            msg.style.color = "#9dffb0";
+          } else if (text.includes("NO_DETECTADO")) {
+            msg.innerHTML = "⚠️ Ticket subido, pero no se detectó ningún código E1/E2.";
+            msg.style.color = "#ffcc00";
+          } else {
+            msg.textContent = text;
+            msg.style.color = text.includes("ERROR") ? "#ffdddd" : "#9dffb0";
+          }
         } catch (err) {
           msg.textContent = "❌ Error: " + err.message;
           msg.style.color = "#ffdddd";
