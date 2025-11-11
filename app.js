@@ -136,13 +136,13 @@ formEl.addEventListener("submit", async (e) => {
   };
 
   try {
-    await fetch(BACKEND_URL, {
+    const proxyURL = `${PROXY}?url=${encodeURIComponent(BACKEND_URL)}`;
+    await fetch(proxyURL, {
       method: "POST",
-     // mode: "no-cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
-    });
-
+});
+    
     msgEl.textContent = "✅ Ticket enviado correctamente";
     msgEl.style.color = "#9dffb0";
 
