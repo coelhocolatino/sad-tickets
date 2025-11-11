@@ -16,7 +16,7 @@ app.listen(PORT, () => console.log(`Servidor activo en puerto ${PORT}`));
 const PROXY = "https://sad-proxy.colatino-ventas-enlinea.workers.dev/";
 
 // 🔹 URL DE TU APP SCRIPT (backend principal)
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwgIaV5DMZIfEZPHM8kOBs5wuPQXei7NWIbEwLQ9fPGMjOXhq_pd6o4UOviHUo_5bFAIQ/exec";
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwdri9IUE8uDCu8EKlo0H5UGU0W8kKXeKkVcyyg8xe86p0WQvRxvdwejY-KDbhTQPYRhQ/exec";
 
 // ====== SPINNER ======
 function startSpinner() {
