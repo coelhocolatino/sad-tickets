@@ -120,19 +120,13 @@
       <input class="control" type="date" name="fecha" id="fecha" required>
 
       <label>Tienda</label>
-      <select class="control" id="tienda" name="tienda" required>
-        <option value="">Seleccione Tienda</option>
-      </select>
+      <select class="control" id="tienda" name="tienda" required></select>
 
       <label>Repartidor</label>
-      <select class="control" id="repartidor" name="repartidor" required>
-        <option value="">Seleccione repartidor</option>
-      </select>
+      <select class="control" id="repartidor" name="repartidor" required></select>
 
       <label>Franja horaria</label>
-      <select class="control" id="franja" name="franja" required>
-        <option value="">Seleccione Horario</option>
-      </select>
+      <select class="control" id="franja" name="franja" required></select>
 
       <div class="row-2">
         <div class="group">
@@ -190,15 +184,28 @@
       })
       .catch(err => msg.textContent = "⚠️ Error cargando listas: " + err.message);
 
-    function fillSelect(id, arr) {
-      const el = document.getElementById(id);
-      el.innerHTML = "";
-      arr.forEach(v => {
-        const op = document.createElement("option");
-        op.value = v; op.textContent = v;
-        el.appendChild(op);
-      });
-    }
+function fillSelect(id, arr) {
+  const el = document.getElementById(id);
+  el.innerHTML = "";
+
+  // Agrega la opción inicial
+  const placeholder = document.createElement("option");
+  if (id === "tienda") placeholder.textContent = "Seleccione tienda...";
+  else if (id === "repartidor") placeholder.textContent = "Seleccione repartidor...";
+  else if (id === "franja") placeholder.textContent = "Seleccione franja horaria...";
+  placeholder.value = "";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  el.appendChild(placeholder);
+
+  // Agrega el resto de las opciones
+  arr.forEach(v => {
+    const op = document.createElement("option");
+    op.value = v;
+    op.textContent = v;
+    el.appendChild(op);
+  });
+}
     // === Control de botones para foto ===
     const fotoInput = document.getElementById("foto");
     document.getElementById("btnCamara").addEventListener("click", () => {
