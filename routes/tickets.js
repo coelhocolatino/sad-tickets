@@ -12,9 +12,7 @@ function detectarEmbolsadores(textoOCR) {
 
   // Buscar TODOS los códigos válidos tipo E1, E2, ..., E9
   const matches = upperText.match(/\bE[1-9]\b/g) || [];
-
-  // Eliminar duplicados y devolver lista
-  return [...new Set(matches)];
+  return matches.map(x => x.trim());
 }
 
 // 📸 Endpoint: subir ticket
