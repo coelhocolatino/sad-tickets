@@ -68,26 +68,36 @@
     @supports (-webkit-touch-callout:none) { input, select, button { font-size:16px !important; } }
   </style>
   <script>
-  (function () {
-    const ORIGINAL_FETCH = window.fetch;
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxm8H7m88UEkSWpzeh7Gu3ugLUvYIGqxrCBpheSX_L6GzzjkoqSpTZwxn3gDk6tAqCnxg/exec";
-    const PROXY = "https://sad-proxy.colatino-ventas-enlinea.workers.dev/";
+(function () {
+  const ORIGINAL_FETCH = window.fetch;
+  const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxm8H7m88UEkSWpzeh7Gu3ugLUvYIGqxrCBpheSX_L6GzzjkoqSpTZwxn3gDk6tAqCnxg/exec";
+  const PROXY = "https://sad-proxy.colatino-ventas-enlinea.workers.dev/";
 
-    window.BACKEND_URL = BACKEND_URL;
-    
-    window.fetch = function (input, init = {}) {
-      let url = typeof input === "string" ? input : input.url;
+  // ✅ Hacerlo accesible globalmente
+  window.BACKEND_URL = BACKEND_URL;
 
-      // Solo redirigimos las llamadas al Apps Script
-      if (url === BACKEND_URL) {
+  // ✅ Interceptar fetch sin errores
+  window.fetch = function (input, init = {}) {
+    try {
+      const url =
+        typeof input === "string"
+          ? input
+          : (input && input.url) ? input.url : "";
+
+      // Solo redirigimos si apunta al Apps Script
+      if (url && url === BACKEND_URL) {
         const proxyURL = PROXY + "?url=" + encodeURIComponent(BACKEND_URL);
         return ORIGINAL_FETCH(proxyURL, init);
       }
 
-      // Todo lo demás funciona igual
+      // Caso normal: llamada externa (no interceptada)
       return ORIGINAL_FETCH(input, init);
-    };
-  })();
+    } catch (err) {
+      console.error("⚠️ Error interceptando fetch:", err);
+      return ORIGINAL_FETCH(input, init);
+    }
+  };
+})();
 </script>
 </head>
 
