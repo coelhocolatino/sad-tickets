@@ -224,40 +224,44 @@ function fillSelect(id, arr) {
       if (!file) return alert("Por favor, selecciona una foto del ticket.");
       spinner.style.visibility = "visible";
       msg.textContent = "⏳ Subiendo ticket...";
+const reader = new FileReader();
+reader.onload = async () => {
+  const datos = Object.fromEntries(new FormData(document.getElementById("ticketForm")).entries());
+  datos.imagenBase64 = reader.result;
 
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const datos = Object.fromEntries(new FormData(document.getElementById("ticketForm")).entries());
-        datos.imagenBase64 = reader.result;
-
-        try {
-          const resp = await fetch(window.BACKEND_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datos)
-          });
-          const text = await resp.text();
-
-        if (text.includes("OK")) {
-          msg.innerHTML = text; // mostrar mensaje completo del servidor
-          msg.style.color = "#9dffb0";
-        } else if (text.includes("NO_DETECTADO")) {
-          msg.innerHTML = "⚠️ Ticket subido, pero no se detectó ningún código E1/E2.";
-          msg.style.color = "#ffcc00";
-        } else {
-          msg.textContent = text;
-          msg.style.color = text.includes("ERROR") ? "#ffdddd" : "#9dffb0";
-        } catch (err) {
-          msg.textContent = "❌ Error: " + err.message;
-          msg.style.color = "#ffdddd";
-        } finally {
-          spinner.style.visibility = "hidden";
-          document.getElementById("ticketForm").reset();
-          document.getElementById("fecha").value = new Date().toISOString().split("T")[0];
-        }
-      };
-      reader.readAsDataURL(file);
+  try {
+    const resp = await fetch(window.BACKEND_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos)
     });
-  </script>
+
+    const text = await resp.text();
+
+    if (text.includes("OK")) {
+      // mostrar el mensaje completo del servidor
+      msg.innerHTML = `✅ ${text}`;
+      msg.style.color = "#9dffb0";
+    } else if (text.includes("NO_DETECTADO")) {
+      msg.innerHTML = "⚠️ Ticket subido, pero no se detectó ningún código E1/E2.";
+      msg.style.color = "#ffcc00";
+    } else {
+      msg.textContent = text;
+      msg.style.color = text.includes("ERROR") ? "#ffdddd" : "#9dffb0";
+    }
+
+  } catch (err) {
+    msg.textContent = "❌ Error: " + err.message;
+    msg.style.color = "#ffdddd";
+  } finally {
+    spinner.style.visibility = "hidden";
+    document.getElementById("ticketForm").reset();
+    document.getElementById("fecha").value = new Date().toISOString().split("T")[0];
+  }
+};
+
+reader.readAsDataURL(file);
+});
+   </script>
 </body>
 </html>
