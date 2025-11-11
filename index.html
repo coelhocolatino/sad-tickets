@@ -120,13 +120,19 @@
       <input class="control" type="date" name="fecha" id="fecha" required>
 
       <label>Tienda</label>
-      <select class="control" id="tienda" name="tienda" required></select>
+      <select class="control" id="tienda" name="tienda" required>
+        <option value="">Seleccione Tienda</option>
+      </select>
 
       <label>Repartidor</label>
-      <select class="control" id="repartidor" name="repartidor" required></select>
+      <select class="control" id="repartidor" name="repartidor" required>
+        <option value="">Seleccione repartidor</option>
+      </select>
 
       <label>Franja horaria</label>
-      <select class="control" id="franja" name="franja" required></select>
+      <select class="control" id="franja" name="franja" required>
+        <option value="">Seleccione Horario</option>
+      </select>
 
       <div class="row-2">
         <div class="group">
@@ -154,8 +160,12 @@
         </div>
       </div>
 
-      <label>Foto ticket</label>
-      <input class="control" type="file" id="foto" accept="image/*" capture="environment" required>
+        <label>Foto del ticket</label>
+  <div style="display:flex; gap:10px;">
+    <button type="button" id="btnCamara" style="flex:1;">📷 Sacar foto</button>
+    <button type="button" id="btnArchivo" style="flex:1;">🖼️ Subir archivo</button>
+  </div>
+  <input class="control" type="file" id="foto" accept="image/*" style="display:none;" required>
 
       <button type="submit">⬆️ Subir ticket</button>
       <div id="msg"></div>
@@ -189,7 +199,17 @@
         el.appendChild(op);
       });
     }
-
+    // === Control de botones para foto ===
+    const fotoInput = document.getElementById("foto");
+    document.getElementById("btnCamara").addEventListener("click", () => {
+      fotoInput.removeAttribute("capture"); // limpia cualquier modo anterior
+      fotoInput.setAttribute("capture", "environment"); // fuerza cámara
+      fotoInput.click();
+    });
+    document.getElementById("btnArchivo").addEventListener("click", () => {
+      fotoInput.removeAttribute("capture"); // elimina cámara, abre galería
+      fotoInput.click();
+    });
     // Subir ticket con OCR y feedback visual
     document.getElementById("ticketForm").addEventListener("submit", e => {
       e.preventDefault();
