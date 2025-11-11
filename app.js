@@ -136,13 +136,14 @@ formEl.addEventListener("submit", async (e) => {
   };
 
   try {
-    const proxyURL = `${PROXY}?url=${encodeURIComponent(BACKEND_URL)}`;
-    await fetch(proxyURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+// === USAR PROXY PARA EVITAR CORS ===
+const proxyURL = `${PROXY}?url=${encodeURIComponent(BACKEND_URL)}`;
+await fetch(proxyURL, {
+  method: "POST",
+  mode: "cors", // 👈 esto es importante
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
 });
-    
     msgEl.textContent = "✅ Ticket enviado correctamente";
     msgEl.style.color = "#9dffb0";
 
