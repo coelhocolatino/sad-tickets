@@ -73,6 +73,8 @@
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxm8H7m88UEkSWpzeh7Gu3ugLUvYIGqxrCBpheSX_L6GzzjkoqSpTZwxn3gDk6tAqCnxg/exec";
     const PROXY = "https://sad-proxy.colatino-ventas-enlinea.workers.dev/";
 
+    window.BACKEND_URL = BACKEND_URL;
+    
     window.fetch = function (input, init = {}) {
       let url = typeof input === "string" ? input : input.url;
 
