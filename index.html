@@ -238,17 +238,15 @@ function fillSelect(id, arr) {
           });
           const text = await resp.text();
 
-          if (text.includes("OK") && text.includes("E")) {
-            const embolsador = text.match(/E\d+/i)?.[0] || "";
-            msg.innerHTML = `✅ <b>Embolsador ${embolsador}</b> detectado correctamente`;
-            msg.style.color = "#9dffb0";
-          } else if (text.includes("NO_DETECTADO")) {
-            msg.innerHTML = "⚠️ Ticket subido, pero no se detectó ningún código E1/E2.";
-            msg.style.color = "#ffcc00";
-          } else {
-            msg.textContent = text;
-            msg.style.color = text.includes("ERROR") ? "#ffdddd" : "#9dffb0";
-          }
+        if (text.includes("OK")) {
+          msg.innerHTML = text; // mostrar mensaje completo del servidor
+          msg.style.color = "#9dffb0";
+        } else if (text.includes("NO_DETECTADO")) {
+          msg.innerHTML = "⚠️ Ticket subido, pero no se detectó ningún código E1/E2.";
+          msg.style.color = "#ffcc00";
+        } else {
+          msg.textContent = text;
+          msg.style.color = text.includes("ERROR") ? "#ffdddd" : "#9dffb0";
         } catch (err) {
           msg.textContent = "❌ Error: " + err.message;
           msg.style.color = "#ffdddd";
