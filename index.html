@@ -255,19 +255,24 @@ reader.onload = async () => {
   } finally {
   spinner.style.visibility = "hidden";
 
-  const form = document.getElementById("ticketForm");
-  form.reset();
+  // Mantener mensaje visible unos segundos antes de limpiar
+  setTimeout(() => {
+    const form = document.getElementById("ticketForm");
+    form.reset();
 
-  // Restablecer selects a su estado original
-  document.getElementById("tienda").selectedIndex = 0;
-  document.getElementById("repartidor").selectedIndex = 0;
-  document.getElementById("franja").selectedIndex = 0;
+    // Restablecer selects a su estado original
+    document.getElementById("tienda").selectedIndex = 0;
+    document.getElementById("repartidor").selectedIndex = 0;
+    document.getElementById("franja").selectedIndex = 0;
 
-  // Volver a poner la fecha actual
-  document.getElementById("fecha").value = new Date().toISOString().split("T")[0];
+    // Volver a poner la fecha actual
+    document.getElementById("fecha").value = new Date().toISOString().split("T")[0];
 
-  // Limpiar cualquier mensaje anterior
-  msg.textContent = "";
+    // Limpiar el mensaje visualmente después de 1 segundo
+    msg.style.transition = "opacity 0.5s ease";
+    msg.style.opacity = "0";
+    setTimeout(() => { msg.textContent = ""; }, 500);
+  }, 3000); // mensaje visible durante 3 segundos
 }
 };
 
