@@ -253,10 +253,22 @@ reader.onload = async () => {
     msg.textContent = "❌ Error: " + err.message;
     msg.style.color = "#ffdddd";
   } finally {
-    spinner.style.visibility = "hidden";
-    document.getElementById("ticketForm").reset();
-    document.getElementById("fecha").value = new Date().toISOString().split("T")[0];
-  }
+  spinner.style.visibility = "hidden";
+
+  const form = document.getElementById("ticketForm");
+  form.reset();
+
+  // Restablecer selects a su estado original
+  document.getElementById("tienda").selectedIndex = 0;
+  document.getElementById("repartidor").selectedIndex = 0;
+  document.getElementById("franja").selectedIndex = 0;
+
+  // Volver a poner la fecha actual
+  document.getElementById("fecha").value = new Date().toISOString().split("T")[0];
+
+  // Limpiar cualquier mensaje anterior
+  msg.textContent = "";
+}
 };
 
 reader.readAsDataURL(file);
